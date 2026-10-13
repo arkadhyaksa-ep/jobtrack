@@ -21,7 +21,15 @@ Statuses: Wishlist, Applied, Interview, Offer, Rejected, and Withdrawn.
 
 ## Screenshots
 
-No screenshots are included yet. When ready, add the dashboard image at `docs/screenshots/dashboard.png` and link it here.
+### Application Dashboard
+View job application statistics, search and filter applications, and track each application's current status.
+
+![JobTrack application dashboard](screenshots/dashboard.png)
+
+### Create Application
+Add a job application with company details, job title, application status, date, and notes.
+
+![JobTrack create application form](screenshots/create-application.png)
 
 ## Requirements
 
