@@ -1,50 +1,51 @@
 # JobTrack
 
-JobTrack is a simple job application tracker built as a Laravel portfolio project. It helps keep applications, their current status, and follow-up notes in one place instead of scattered across spreadsheets and messages.
+JobTrack is a Laravel application for keeping job applications, their status, dates, and notes organized in one place. It is a single-user portfolio project built with server-rendered Blade pages.
 
 ## Features
 
-- Create, view, edit, and delete job applications.
-- Record a company, job title, optional posting URL, status, application date, and notes.
-- Search by company name or job title and filter by status; the filters can be combined.
-- Browse newest applications first, 10 per page, with filters preserved across pages.
-- View total, Interview, Offer, and Rejected counts for all applications.
-- See server-side validation errors and a confirmation prompt before deleting an application.
+- Create, list, edit, and delete job applications with company, job title, optional URL, status, application date, and notes.
+- Search by company or job title and filter by status; combine filters and keep them while paging through results.
+- View total application, interview, offer, and rejection counts.
+- Receive server-side validation feedback and a confirmation prompt before deleting an application.
 
-Supported statuses are Wishlist, Applied, Interview, Offer, Rejected, and Withdrawn.
+Statuses: Wishlist, Applied, Interview, Offer, Rejected, and Withdrawn.
 
 ## Technology
 
-- PHP 8.3 or later (the inspected local environment uses PHP 8.3.13).
-- Laravel 13 (installed locally as 13.35.0; the project requires `^13.0`).
-- Blade templates with plain CSS and a small inline JavaScript confirmation.
-- SQLite by default; Laravel's database configuration also includes MySQL support.
-- PHPUnit 12.5 (installed locally as 12.5.38).
-- Vite and Tailwind CSS are included in the frontend toolchain. The current JobTrack pages use inline styles.
-
-Composer 2.8.2, Node.js 25.2.1, and npm 11.6.3 were available in the inspected development environment; these versions are not pinned by the repository.
+- PHP 8.3 (`^8.3`; the inspected local version is 8.3.13); Laravel Framework 13 (`^13.0`; installed locally as 13.35.0).
+- Blade, plain CSS (`public/css/jobtrack.css`), and minimal JavaScript.
+- SQLite is the checked-in default. Laravel also has MySQL and MariaDB connection configurations.
+- PHPUnit 12 (the project requires `^12.5.12`; the inspected installation is 12.5.38).
+- Vite, Tailwind CSS, and Node.js/npm are included for frontend asset development, but are not required to run JobTrack's pages.
 
 ## Screenshots
 
-Screenshots have not been added yet. Add them to the repository when available and replace this placeholder with the images and captions.
+No screenshots are included yet. When ready, add the dashboard image at `docs/screenshots/dashboard.png` and link it here.
 
 ## Requirements
 
-- PHP 8.3 or later and Composer.
-- A database supported by Laravel. The checked-in default is SQLite and requires the PHP `pdo_sqlite` extension. MySQL or MariaDB can be used by configuring the MySQL connection and enabling `pdo_mysql`.
-- Node.js and npm are optional for `/applications`; they are needed to build the Vite assets used by the default `/` welcome page or to work on the frontend asset pipeline.
-- The SQLite PDO extension is also required to run the database-backed test suite, which uses an in-memory SQLite database.
+- PHP 8.3+ and Composer 2.2+.
+- PHP extensions required by Laravel: `ctype`, `filter`, `hash`, `mbstring`, `openssl`, `session`, and `tokenizer`.
+- PDO and one driver for the selected database: `pdo_sqlite` for SQLite or `pdo_mysql` for MySQL/MariaDB.
+- To run the test suite, enable `pdo_sqlite`, `dom`, `json`, `libxml`, `mbstring`, and `xmlwriter` for the PHP CLI.
+- A running MySQL or MariaDB server only if using that database instead of SQLite.
 
-## Installation and setup
+## Local setup (Windows PowerShell)
 
-Run these commands in PowerShell. `<JOBTRACK_REPOSITORY_URL>` is a placeholder; replace it once a Git remote for JobTrack exists.
+Clone the repository and install PHP dependencies:
 
 ```powershell
-git clone <JOBTRACK_REPOSITORY_URL> jobtrack
-cd jobtrack
+git clone https://github.com/arkadhyaksa-ep/jobtrack.git jobtrack
+Set-Location jobtrack
 composer install
 Copy-Item .env.example .env
 php artisan key:generate
+```
+
+The checked-in `.env.example` selects SQLite and leaves `DB_DATABASE` commented out. Laravel then uses `database/database.sqlite`. Create that file if it does not already exist, and run the migrations:
+
+```powershell
 if (-not (Test-Path database/database.sqlite)) {
     New-Item -ItemType File -Path database/database.sqlite | Out-Null
 }
@@ -52,48 +53,45 @@ php artisan migrate
 php artisan serve
 ```
 
-Open the local address printed by `php artisan serve` and visit `/applications`.
+Open the address printed by Artisan and visit `/applications`. Keep `.env` on your machine; it is ignored by Git. Generate an application key for a new environment, and do not replace a key that is already in use without a reason.
 
-Keep `.env` local; it is ignored by Git. `php artisan key:generate` creates an application key for a new local environment. If a valid local key is already present, do not replace it unnecessarily.
+### MySQL or MariaDB
 
-### Database configuration
+To use MySQL or MariaDB, first create an empty database and configure the local `.env` with `DB_CONNECTION=mysql`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, and `DB_PASSWORD` for that server. Then run `php artisan migrate`. Use credentials appropriate to your local database; do not put them in this README or commit `.env`.
 
-The checked-in `.env.example` selects SQLite. Laravel's database configuration uses `database/database.sqlite` as the SQLite path when `DB_DATABASE` is not set. The setup commands above create that file before running migrations.
+The local development `.env` in this workspace selects a MySQL-compatible connection. It is ignored by Git and is separate from the checked-in SQLite `.env.example`; no local credentials are part of the repository setup.
 
-To use MySQL or MariaDB instead, create an empty database, set `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, and `DB_PASSWORD` in your local `.env`, and then run `php artisan migrate`. Set credentials appropriate to your own database locally; never commit `.env`.
+### Optional frontend tooling
 
-### Optional frontend assets
-
-The JobTrack pages use inline CSS and do not load Vite assets, so these commands are not required to run `/applications`. The default `/` welcome page does load Vite assets. To build those assets, install Node.js and npm, then run:
+JobTrack loads `public/css/jobtrack.css` directly, so Node.js/npm and Vite are not needed to run `/applications`. They are available for frontend asset development. From the project directory, install the JavaScript dependencies and build the Vite assets with:
 
 ```powershell
 npm install
 npm run build
 ```
 
-## Running tests
+## Tests
 
-The PHPUnit configuration sets `DB_CONNECTION=sqlite` and `DB_DATABASE=:memory:` for tests, so database-backed tests use a fresh in-memory database rather than the development database. Ensure `pdo_sqlite` is enabled for the PHP CLI, then run:
+The PHPUnit configuration overrides the application database settings and uses an in-memory SQLite database (`DB_CONNECTION=sqlite`, `DB_DATABASE=:memory:`). Enable `pdo_sqlite` for the PHP CLI, then run:
 
 ```powershell
 php artisan test
 ```
 
+The most recent reported run passed 23 tests with 111 assertions.
+
 ## Project structure
 
-- `app/Http/Controllers/` - request handling, validation, queries, and redirects.
-- `app/Models/` - Eloquent models, including `JobApplication`.
-- `database/migrations/` - application and Laravel database table definitions.
-- `resources/views/job_applications/` - Blade list, create, and edit pages.
-- `routes/web.php` - web routes for the application workflow.
-- `tests/Feature/` and `tests/Unit/` - feature behavior and unit tests.
-- `config/`, `public/`, and `resources/` - Laravel configuration, web entry point, and frontend assets.
+- `app/Http/Controllers/` — request handling, validation, queries, and redirects.
+- `app/Models/` — Eloquent models, including `JobApplication`.
+- `database/migrations/` — Laravel and job application table definitions.
+- `resources/views/job_applications/` — application list, create, and edit pages.
+- `resources/views/layouts/` — shared JobTrack Blade layout.
+- `resources/views/vendor/pagination/` — custom pagination view.
+- `public/css/jobtrack.css` — shared JobTrack styles.
+- `routes/web.php` — application routes.
+- `tests/Feature/` and `tests/Unit/` — automated tests.
 
-## Current limitations
+## Limitations
 
-JobTrack currently has no authentication and does not assign applications to individual users. Anyone who can access the application can see and change the same application records. It is intended as a local, single-user prototype, not a production-ready multi-user service.
-
-## Setup notes to verify
-
-- Replace the repository URL placeholder above after creating a Git remote for JobTrack. The current configured remotes point to the Laravel starter repository, not a JobTrack portfolio repository.
-- These fresh-machine instructions have not been run on a clean installation. Verify the PHP SQLite extension and migrations on the target machine. Verify the optional asset build if you plan to use the default `/` welcome page or modify frontend assets.
+JobTrack has no authentication or per-user data isolation. Anyone with access to the application can view and change the same application records. It is a local, single-user portfolio prototype, not a production-ready or multi-user service.

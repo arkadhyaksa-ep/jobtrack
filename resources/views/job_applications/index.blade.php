@@ -1,128 +1,150 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Job Applications</title>
-    <style>
-        :root { color-scheme: light; font-family: Arial, sans-serif; color: #1f2937; background: #f3f4f6; }
-        * { box-sizing: border-box; }
-        body { margin: 0; padding: 2rem 1rem; }
-        main { max-width: 960px; margin: 0 auto; }
-        .page-heading { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
-        h1 { margin: 0; font-size: 1.8rem; }
-        .add-link { display: inline-block; padding: .7rem 1rem; border-radius: .35rem; background: #2563eb; color: #fff; text-decoration: none; }
-        .table-wrap { overflow-x: auto; background: #fff; border: 1px solid #e5e7eb; border-radius: .5rem; }
-        table { width: 100%; border-collapse: collapse; text-align: left; }
-        th, td { padding: .9rem 1rem; border-bottom: 1px solid #e5e7eb; }
-        th { color: #4b5563; font-size: .85rem; }
-        tbody tr:last-child td { border-bottom: 0; }
-        .empty-state { color: #6b7280; text-align: center; padding: 2rem 1rem; }
-        .pagination { margin-top: 1rem; }
-        .success-message { margin: 0 0 1rem; padding: .85rem 1rem; border: 1px solid #86efac; border-radius: .4rem; background: #f0fdf4; color: #166534; }
-        .summary-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: .75rem; margin-bottom: 1.25rem; }
-        .summary-card { display: grid; gap: .5rem; padding: 1rem; background: #fff; border: 1px solid #e5e7eb; border-radius: .5rem; }
-        .summary-card span { color: #4b5563; font-size: .9rem; }
-        .summary-card strong { font-size: 1.6rem; }
-    </style>
-</head>
-<body>
-    <main>
-        <div class="page-heading">
+@extends('layouts.app')
+
+@section('title', 'Job Applications | JobTrack')
+
+@section('content')
+    <div class="dashboard-content">
+    <div class="page-heading">
+        <div class="page-heading__copy">
+            <p class="eyebrow"><span class="eyebrow__dot" aria-hidden="true"></span>Application workspace</p>
             <h1>Job Applications</h1>
-            <a class="add-link" href="{{ route('applications.create') }}">Add Application</a>
+            <p class="page-description">A clear view of every opportunity, from first thought to final decision.</p>
         </div>
+        <a class="button button--primary button--add" href="{{ route('applications.create') }}"><span aria-hidden="true">+</span> Add Application</a>
+    </div>
 
-        @if (session('success'))
-            <p class="success-message" role="status">{{ session('success') }}</p>
-        @endif
+    @if (session('success'))
+        <p class="notice" role="status">{{ session('success') }}</p>
+    @endif
 
-        <section class="summary-cards" aria-label="Application summary">
-            <article class="summary-card" data-stat="total" data-count="{{ $statistics['total'] }}">
-                <span>Total applications</span>
-                <strong>{{ $statistics['total'] }}</strong>
-            </article>
-            <article class="summary-card" data-stat="interview" data-count="{{ $statistics['interview'] }}">
-                <span>Interviews</span>
-                <strong>{{ $statistics['interview'] }}</strong>
-            </article>
-            <article class="summary-card" data-stat="offer" data-count="{{ $statistics['offer'] }}">
-                <span>Offers</span>
-                <strong>{{ $statistics['offer'] }}</strong>
-            </article>
-            <article class="summary-card" data-stat="rejected" data-count="{{ $statistics['rejected'] }}">
-                <span>Rejected</span>
-                <strong>{{ $statistics['rejected'] }}</strong>
-            </article>
-        </section>
+    <section class="summary-grid" aria-label="Application summary">
+        <article class="summary-card summary-card--total" data-stat="total" data-count="{{ $statistics['total'] }}">
+            <div class="summary-card__top">
+                <span class="summary-card__label">Total applications</span>
+                <span class="summary-card__icon summary-card__icon--total" aria-hidden="true">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"></rect><path d="M9 4.5V3h6v1.5M8.5 10h7M8.5 14h7M8.5 18h4"></path></svg>
+                </span>
+            </div>
+            <strong class="summary-card__value">{{ $statistics['total'] }}</strong>
+        </article>
+        <article class="summary-card summary-card--interview" data-stat="interview" data-count="{{ $statistics['interview'] }}">
+            <div class="summary-card__top">
+                <span class="summary-card__label">Interviews</span>
+                <span class="summary-card__icon summary-card__icon--interview" aria-hidden="true">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H7l-3 2v-5.2A7.5 7.5 0 1 1 20 11.5Z"></path><path d="M8.5 11.5h.01M12.5 11.5h.01M16.5 11.5h.01"></path></svg>
+                </span>
+            </div>
+            <strong class="summary-card__value">{{ $statistics['interview'] }}</strong>
+        </article>
+        <article class="summary-card summary-card--offer" data-stat="offer" data-count="{{ $statistics['offer'] }}">
+            <div class="summary-card__top">
+                <span class="summary-card__label">Offers</span>
+                <span class="summary-card__icon summary-card__icon--offer" aria-hidden="true">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z"></path><path d="m9.3 12.2 1.8 1.8 3.8-4"></path></svg>
+                </span>
+            </div>
+            <strong class="summary-card__value">{{ $statistics['offer'] }}</strong>
+        </article>
+        <article class="summary-card summary-card--rejected" data-stat="rejected" data-count="{{ $statistics['rejected'] }}">
+            <div class="summary-card__top">
+                <span class="summary-card__label">Rejected</span>
+                <span class="summary-card__icon summary-card__icon--rejected" aria-hidden="true">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"></circle><path d="m9 9 6 6m0-6-6 6"></path></svg>
+                </span>
+            </div>
+            <strong class="summary-card__value">{{ $statistics['rejected'] }}</strong>
+        </article>
+    </section>
 
-        <form method="GET" action="{{ route('applications.index') }}" style="display: flex; flex-wrap: wrap; gap: .75rem; align-items: end; margin-bottom: 1rem;">
-            <label for="search" style="display: grid; gap: .35rem;">
-                Search company or job title
-                <input id="search" name="search" type="search" value="{{ $search }}">
-            </label>
-            <label for="status" style="display: grid; gap: .35rem;">
-                Status
+    <section class="filter-card" aria-label="Search and filter applications">
+        <form method="GET" action="{{ route('applications.index') }}" class="filter-form">
+            <div class="field">
+                <label class="field__label" for="search">Search company or job title</label>
+                <input id="search" name="search" type="search" value="{{ $search }}" placeholder="e.g. Acme or Product Designer">
+            </div>
+            <div class="field">
+                <label class="field__label" for="status">Application status</label>
                 <select id="status" name="status">
                     <option value="" @selected($selectedStatus === '')>All statuses</option>
                     @foreach (['Wishlist', 'Applied', 'Interview', 'Offer', 'Rejected', 'Withdrawn'] as $statusOption)
                         <option value="{{ $statusOption }}" @selected($selectedStatus === $statusOption)>{{ $statusOption }}</option>
                     @endforeach
                 </select>
-            </label>
-            <button type="submit">Search</button>
-            <a href="{{ route('applications.index') }}">Clear filters</a>
+            </div>
+            <button class="button button--primary" type="submit">Search</button>
+            <a class="filter-reset" href="{{ route('applications.index') }}">Clear filters</a>
         </form>
+    </section>
 
+    <section class="table-card" aria-label="Job application results">
+        <div class="table-card__heading">
+            <div>
+                <h2>Application records</h2>
+                <p>Review your latest opportunities and next steps.</p>
+            </div>
+            <span class="result-count">{{ $applications->total() }} {{ \Illuminate\Support\Str::plural('result', $applications->total()) }}</span>
+        </div>
         <div class="table-wrap">
-            <table>
+            <table class="applications-table">
                 <thead>
                     <tr>
                         <th scope="col">Company</th>
-                        <th scope="col">Job Title</th>
+                        <th scope="col">Job title</th>
                         <th scope="col">Status</th>
-                        <th scope="col">Application Date</th>
+                        <th scope="col">Application date</th>
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($applications as $application)
                         <tr>
-                            <td>{{ $application->company_name }}</td>
-                            <td>{{ $application->job_title }}</td>
-                            <td>{{ $application->status }}</td>
+                            <td><span class="company-name">{{ $application->company_name }}</span></td>
+                            <td><span class="job-title">{{ $application->job_title }}</span></td>
+                            <td><span class="status-badge status-{{ strtolower($application->status) }}">{{ $application->status }}</span></td>
                             <td>
-                                {{ $application->applied_at
-                                    ? \Illuminate\Support\Carbon::parse($application->applied_at)->format('M j, Y')
-                                    : '—' }}
+                                @if ($application->applied_at instanceof \DateTimeInterface)
+                                    {{ $application->applied_at->format('M j, Y') }}
+                                @elseif (is_string($application->applied_at) && $application->applied_at !== '')
+                                    {{ \Illuminate\Support\Carbon::parse($application->applied_at)->format('M j, Y') }}
+                                @else
+                                    —
+                                @endif
                             </td>
                             <td>
-                                <a href="{{ route('applications.edit', $application) }}">Edit</a>
-                                <form method="POST" action="{{ route('applications.destroy', $application) }}" onsubmit="return confirm('Are you sure you want to delete this application?')" style="display: inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit">Delete</button>
-                                </form>
+                                <div class="row-actions">
+                                    <a class="action-link" href="{{ route('applications.edit', $application) }}">Edit</a>
+                                    <form class="delete-form" method="POST" action="{{ route('applications.destroy', $application) }}" onsubmit="return confirm('Are you sure you want to delete this application?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="button button--danger-quiet" type="submit">Delete</button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
                             <td class="empty-state" colspan="5">
-                                @if ($hasFilters)
-                                    No job applications match your search or filters.
-                                @else
-                                    No job applications yet. They’ll appear here when you add one.
-                                @endif
+                                <div class="empty-state__content">
+                                    <span class="empty-state__mark" aria-hidden="true">{{ $hasFilters ? '?' : '+' }}</span>
+                                    @if ($hasFilters)
+                                        <strong>No matching applications</strong>
+                                        <span>No job applications match your search or filters.</span>
+                                    @else
+                                        <strong>Your tracker is ready</strong>
+                                        <span>No job applications yet. They&rsquo;ll appear here when you add one.</span>
+                                        <a class="button button--secondary" href="{{ route('applications.create') }}">Add your first application</a>
+                                    @endif
+                                </div>
                             </td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
+    </section>
 
-        <div class="pagination">
-            {{ $applications->links() }}
-        </div>
-    </main>
-</body>
-</html>
+    <div class="pagination-container">
+        {{ $applications->links('vendor.pagination.jobtrack') }}
+    </div>
+    </div>
+@endsection
