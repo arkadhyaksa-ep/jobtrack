@@ -94,13 +94,24 @@ h1 { margin: 0; color: var(--color-ink); font-size: clamp(1.7rem, 3vw, 2.15rem);
 .table-card__heading p { margin: 0; color: #858197; font-size: .82rem; line-height: 1.45; }
 .result-count { flex: 0 0 auto; padding: 6px 10px; border: 1px solid #e9e5f4; border-radius: 999px; background: #faf9fe; color: #706b85; font-size: .75rem; font-weight: 700; }
 .table-wrap { overflow-x: auto; }
-.applications-table { width: 100%; min-width: 760px; border-collapse: collapse; text-align: left; }
+.applications-table { width: 100%; min-width: 1080px; table-layout: fixed; border-collapse: collapse; text-align: left; }
+.applications-table th:nth-child(1), .applications-table td:nth-child(1) { width: 15%; }
+.applications-table th:nth-child(2), .applications-table td:nth-child(2) { width: 17%; }
+.applications-table th:nth-child(3), .applications-table td:nth-child(3) { width: 10%; }
+.applications-table th:nth-child(4), .applications-table td:nth-child(4) { width: 12%; }
+.applications-table th:nth-child(5), .applications-table td:nth-child(5) { width: 20%; }
+.applications-table th:nth-child(6), .applications-table td:nth-child(6) { width: 12%; }
+.applications-table th:nth-child(7), .applications-table td:nth-child(7) { width: 14%; }
 .applications-table th { padding: 13px 18px; border-bottom: 1px solid #eceaf3; background: #fbfaff; color: #79758c; font-size: .69rem; font-weight: 780; letter-spacing: .085em; text-transform: uppercase; white-space: nowrap; }
 .applications-table td { padding: 15px 18px; border-bottom: 1px solid #f0eef5; color: #5d596f; font-size: .88rem; line-height: 1.4; vertical-align: middle; transition: background-color .14s ease; }
 .applications-table tbody tr:last-child td { border-bottom: 0; }
 .applications-table tbody tr:hover td { background: #fcfbff; }
 .company-name { display: block; color: #302d46; font-weight: 720; }
 .job-title { color: #625f74; }
+.job-link { display: inline-flex; align-items: center; gap: 4px; color: #5b46b5; font-size: .8rem; font-weight: 720; text-decoration: none; white-space: nowrap; }
+.job-link:hover { color: #3f3290; text-decoration: underline; text-underline-offset: 3px; }
+.table-placeholder { color: #a09caf; font-size: .85rem; }
+.notes-preview { display: -webkit-box; max-width: 270px; overflow: hidden; color: #676378; font-size: .82rem; line-height: 1.45; white-space: pre-line; overflow-wrap: anywhere; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
 .status-badge { display: inline-flex; align-items: center; gap: 7px; padding: 5px 9px; border: 1px solid transparent; border-radius: 999px; font-size: .73rem; font-weight: 750; white-space: nowrap; }
 .status-badge::before { width: 6px; height: 6px; border-radius: 50%; background: currentColor; content: ""; }
 .status-wishlist { border-color: #e3e0f3; background: #f4f2fb; color: #696184; }

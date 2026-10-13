@@ -84,13 +84,15 @@
             </div>
             <span class="result-count">{{ $applications->total() }} {{ \Illuminate\Support\Str::plural('result', $applications->total()) }}</span>
         </div>
-        <div class="table-wrap">
+        <div class="table-wrap" role="region" aria-label="Scrollable job application table" tabindex="0">
             <table class="applications-table">
                 <thead>
                     <tr>
                         <th scope="col">Company</th>
                         <th scope="col">Job title</th>
+                        <th scope="col">Job link</th>
                         <th scope="col">Status</th>
+                        <th scope="col">Notes</th>
                         <th scope="col">Application date</th>
                         <th scope="col">Actions</th>
                     </tr>
@@ -100,7 +102,21 @@
                         <tr>
                             <td><span class="company-name">{{ $application->company_name }}</span></td>
                             <td><span class="job-title">{{ $application->job_title }}</span></td>
+                            <td>
+                                @if (is_string($application->job_url) && filter_var($application->job_url, FILTER_VALIDATE_URL) && preg_match('/\Ahttps?:\/\//i', $application->job_url))
+                                    <a class="job-link" href="{{ $application->job_url }}" target="_blank" rel="noopener noreferrer" aria-label="View job posting (opens in a new tab)">View job <span aria-hidden="true">↗</span></a>
+                                @else
+                                    <span class="table-placeholder" aria-label="No job link">—</span>
+                                @endif
+                            </td>
                             <td><span class="status-badge status-{{ strtolower($application->status) }}">{{ $application->status }}</span></td>
+                            <td>
+                                @if (is_string($application->notes) && trim($application->notes) !== '')
+                                    <span class="notes-preview">{{ \Illuminate\Support\Str::limit(trim($application->notes), 79, '…') }}</span>
+                                @else
+                                    <span class="table-placeholder" aria-label="No notes">—</span>
+                                @endif
+                            </td>
                             <td>
                                 @if ($application->applied_at instanceof \DateTimeInterface)
                                     {{ $application->applied_at->format('M j, Y') }}
@@ -123,7 +139,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td class="empty-state" colspan="5">
+                            <td class="empty-state" colspan="7">
                                 <div class="empty-state__content">
                                     <span class="empty-state__mark" aria-hidden="true">{{ $hasFilters ? '?' : '+' }}</span>
                                     @if ($hasFilters)
